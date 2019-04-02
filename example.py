@@ -53,37 +53,41 @@ def load_cifar():
         testset, batch_size=128, shuffle=False, num_workers=8)
     return trainloader, testloader
 
+
 def load_lfw():
 
-    file_ext = 'jpg' # observe, no '.' before jpg
+    file_ext = 'jpg'  # observe, no '.' before jpg
 
     dataset_path = './data/lfw'
 
     pairs_path = './data/pairs.txt'
 
     pairs = utils.read_pairs(pairs_path)
-    path_list, issame_list = utils.get_paths(args.dataset_path, pairs, file_ext)
+    path_list, issame_list = utils.get_paths(
+        args.dataset_path, pairs, file_ext)
 
     print('==> Preparing data..')
     # Define data transforms
-    RGB_MEAN = [ 0.485, 0.456, 0.406 ]
-    RGB_STD = [ 0.229, 0.224, 0.225 ]
+    RGB_MEAN = [0.485, 0.456, 0.406]
+    RGB_STD = [0.229, 0.224, 0.225]
     test_transform = transforms.Compose([
-        transforms.Scale((250,250)),  # make 250x250
+        transforms.Scale((250, 250)),  # make 250x250
         transforms.CenterCrop(150),   # then take 150x150 center crop
-        transforms.Scale((224,224)),  # resized to the network's required input size
+        # resized to the network's required input size
+        transforms.Scale((224, 224)),
         transforms.ToTensor(),
-        transforms.Normalize(mean = RGB_MEAN,
-                             std = RGB_STD),
+        transforms.Normalize(mean=RGB_MEAN,
+                             std=RGB_STD),
     ])
 
     # Create data loader
     test_loader = torch.utils.data.DataLoader(
-                        data_loader.LFWDataset(
-                        path_list, issame_list, test_transform), 
-                        batch_size=args.batch_size, shuffle=False )
+        data_loader.LFWDataset(
+            path_list, issame_list, test_transform),
+        batch_size=args.batch_size, shuffle=False)
 
     return test_loader
+
 
 def train(model, optimizer, criterion, trainloader, architecture, attacker=None, num_epochs=25, freq=10, early_stopping=True):
     """
@@ -127,8 +131,8 @@ def train(model, optimizer, criterion, trainloader, architecture, attacker=None,
                 total_adv += labels.size(0)
 
             if (i+1) % freq == 0:
-                print('[%s: %d, %5d] loss: %.4f' % (architecture, epoch + 1, i + 1, running_loss / 2),\
-                    correct/total, correct_adv/total_adv)
+                print('[%s: %d, %5d] loss: %.4f' % (architecture, epoch + 1, i + 1, running_loss / 2),
+                      correct/total, correct_adv/total_adv)
                 if early_stopping:
                     if running_loss < early_stop_param:
                         print("Early Stopping !!!!!!!!!!")
@@ -174,7 +178,7 @@ def test(model, criterion, testloader, attacker, model_name, att_name):
         samples_name = 'images/'+name+str(epsilon) + '_samples.png'
         vutils.save_image(fake.data, samples_name)
         print(('Test Acc Acc: %.4f | Test Attacked Acc; %.4f'
-              % (100.*correct/total, 100.*correct_adv/total)))
+               % (100.*correct/total, 100.*correct_adv/total)))
         resultsDF.loc[i] = [model_name, att_name,
                             epsilon, correct/total, correct_adv/total]
         i = i + 1
