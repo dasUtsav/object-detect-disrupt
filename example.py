@@ -127,8 +127,8 @@ def train(model, optimizer, criterion, trainloader, architecture, attacker=None,
                 total_adv += labels.size(0)
 
             if (i+1) % freq == 0:
-                print '[%s: %d, %5d] loss: %.4f' % (architecture, epoch + 1, i + 1, running_loss / 2),\
-                    correct/total, correct_adv/total_adv
+                print('[%s: %d, %5d] loss: %.4f' % (architecture, epoch + 1, i + 1, running_loss / 2),\
+                    correct/total, correct_adv/total_adv)
                 if early_stopping:
                     if running_loss < early_stop_param:
                         print("Early Stopping !!!!!!!!!!")
@@ -173,8 +173,8 @@ def test(model, criterion, testloader, attacker, model_name, att_name):
         fake = adv_inputs
         samples_name = 'images/'+name+str(epsilon) + '_samples.png'
         vutils.save_image(fake.data, samples_name)
-        print('Test Acc Acc: %.4f | Test Attacked Acc; %.4f'
-              % (100.*correct/total, 100.*correct_adv/total))
+        print(('Test Acc Acc: %.4f | Test Attacked Acc; %.4f'
+              % (100.*correct/total, 100.*correct_adv/total)))
         resultsDF.loc[i] = [model_name, att_name,
                             epsilon, correct/total, correct_adv/total]
         i = i + 1
@@ -188,7 +188,7 @@ def prep(model):
     if model and use_cuda:
         model.cuda()
         model = torch.nn.DataParallel(
-            model, device_ids=range(torch.cuda.device_count()))
+            model, device_ids=list(range(torch.cuda.device_count())))
         cudnn.benchmark = True
     return model
 
@@ -208,7 +208,7 @@ if __name__ == "__main__":
 
     for init_func, name, epochs in architectures:
         for tr_adv in [False, True]:
-            print name, tr_adv
+            print(name, tr_adv)
             model = prep(init_func())
             attacker = attacks.DCGAN(train_adv=tr_adv)
 

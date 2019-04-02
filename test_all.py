@@ -99,10 +99,10 @@ def test_all(classifier_name, path_to_classifier_weights, path_to_CATN, fgsm=Fal
     timeend3 = time.time()
     #print(catn_test_adv_acc)
     if (fgsm):
-        print "fgsm time: ", (timeend1-timestart1)
+        print("fgsm time: ", (timeend1-timestart1))
     if(cw):
-        print "cw time: ", (timeend2-timestart2)
-    print "gatn time: " ,(timeend3 - timestart3)
+        print("cw time: ", (timeend2-timestart2))
+    print("gatn time: " ,(timeend3 - timestart3))
     return test_acc, fgsm_test_adv_acc, cw_test_adv_acc, catn_test_adv_acc
 
 
@@ -152,12 +152,12 @@ if __name__ == "__main__":
 
     test_acc, fgsm_test_adv_acc, cw_test_adv_acc, catn_test_adv_acc = test_all(args.classifier_name,args.path_to_classifier_weights,
         args.path_to_attacker_weights,fgsm=args.fgsm,cw=args.cw)
-    print "Unperturbed test accuracy: ", test_acc * 100.0
+    print("Unperturbed test accuracy: ", test_acc * 100.0)
     if(args.fgsm):
-        print "FGSM attacked test accuracy: ", fgsm_test_adv_acc*100.0
+        print("FGSM attacked test accuracy: ", fgsm_test_adv_acc*100.0)
     if(args.cw):
-        print "CarliniWagner attacked test accuracy: ", cw_test_adv_acc*100.0
-    print "GATN attacked test accuracy: ", catn_test_adv_acc*100.0
+        print("CarliniWagner attacked test accuracy: ", cw_test_adv_acc*100.0)
+    print("GATN attacked test accuracy: ", catn_test_adv_acc*100.0)
 '''
     for m in architectures.keys():
         for n in architectures.keys():

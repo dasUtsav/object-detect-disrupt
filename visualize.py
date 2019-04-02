@@ -21,7 +21,7 @@ attacker = attacks.FGSM()
 model = VGG('VGG16')
 model.cuda()
 model = torch.nn.DataParallel(
-    model, device_ids=range(torch.cuda.device_count()))
+    model, device_ids=list(range(torch.cuda.device_count())))
 model.load_state_dict(torch.load('saved/VGG16.pth'))
 
 criterion = nn.CrossEntropyLoss()
